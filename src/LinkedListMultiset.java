@@ -16,7 +16,7 @@ public class LinkedListMultiset<T> extends Multiset<T>
 
 
 	public void add(T item) {
-        validateItem(item);
+        validate(item);
 
         Node<T> searchNode = findNodeContaining(item);
 
@@ -41,7 +41,7 @@ public class LinkedListMultiset<T> extends Multiset<T>
 	
 	
 	public int search(T item) {
-        validateItem(item);
+        validate(item);
 
         Node<T> searchNode = findNodeContaining(item);
         if (searchNode == null) {
@@ -53,7 +53,7 @@ public class LinkedListMultiset<T> extends Multiset<T>
 	
 	
 	public void removeOne(T item) {
-        validateItem(item);
+        validate(item);
 
         Node<T> searchNode = findNodeContaining(item);
         if (searchNode != null && searchNode.getCount() == 1) {
@@ -68,7 +68,7 @@ public class LinkedListMultiset<T> extends Multiset<T>
 	
 	
 	public void removeAll(T item) {
-        validateItem(item);
+        validate(item);
 
         Node<T> searchNode = findNodeContaining(item);
 
@@ -107,7 +107,7 @@ public class LinkedListMultiset<T> extends Multiset<T>
     }
 
 
-	private void validateItem(T item) throws NullPointerException {
+	private void validate(T item) throws NullPointerException {
         if (item == null) throw new NullPointerException("null item passed into add function");
     }
 
