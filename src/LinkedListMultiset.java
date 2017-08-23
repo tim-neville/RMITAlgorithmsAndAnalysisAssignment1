@@ -57,7 +57,13 @@ public class LinkedListMultiset<T> extends Multiset<T>
 
         Node<T> searchNode = findNodeContaining(item);
         if (searchNode != null && searchNode.getCount() == 1) {
-            searchNode.previous.setNext(searchNode.next);
+            if (searchNode == head) {
+                head = searchNode.getNext();
+            } else if (searchNode == tail) {
+                tail = searchNode.getPrevious();
+            } else {
+                searchNode.previous.setNext(searchNode.next);
+            }
             size--;
         } else {
             int count = searchNode.getCount();
@@ -73,8 +79,14 @@ public class LinkedListMultiset<T> extends Multiset<T>
         Node<T> searchNode = findNodeContaining(item);
 
         if (searchNode != null) {
+            if (searchNode == head) {
+                head = searchNode.getNext();
+            } else if (searchNode == tail) {
+                tail = searchNode.getPrevious();
+            } else {
+                searchNode.previous.setNext(searchNode.next);
+            }
             size -= searchNode.getCount();
-            searchNode.previous.setNext(searchNode.next);
         }
 	}
 	
@@ -94,7 +106,9 @@ public class LinkedListMultiset<T> extends Multiset<T>
 		return size == 0;
 	}
 
-	private Node<T> findNodeContaining(T item) throws NullPointerException {
+	private Node<T> findNodeContaining(T item) {
+	    if (isEmpty()) { return null; }
+
 	    Node<T> currentNode = head;
 
 	    while (currentNode != null) {

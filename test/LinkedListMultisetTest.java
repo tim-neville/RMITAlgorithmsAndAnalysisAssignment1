@@ -33,17 +33,29 @@ public class LinkedListMultisetTest {
         assertEquals("contains 4 Fortune", 4, linkedListMultiset.search("Fortune"));
         assertEquals("contains 1 Chocolate", 1, linkedListMultiset.search("Chocolate"));
     }
-    
+
     @Test
-    public void removeOne() throws Exception {
+    public void emptyListReturnsCorrectElementCountAfterRemoveOne() throws Exception {
         linkedListMultiset.add("Hops");
         linkedListMultiset.removeOne("Hops");
 
         assertEquals("Should be no Hops",0, linkedListMultiset.search("Hops"));
+
     }
 
     @Test
-    public void removeAll() throws Exception {
+    public void emptyListReturnsZeroElementCountAfterRemoveAll() throws Exception {
+        linkedListMultiset.add("Fortune");
+        linkedListMultiset.add("Fortune");
+        linkedListMultiset.add("Fortune");
+        linkedListMultiset.add("Fortune");
+        linkedListMultiset.add("Fortune");
+
+        assertEquals(5, linkedListMultiset.search("Fortune"));
+
+        linkedListMultiset.removeAll("Fortune");
+
+        assertEquals(0, linkedListMultiset.search("Fortune"));
     }
 
 }
