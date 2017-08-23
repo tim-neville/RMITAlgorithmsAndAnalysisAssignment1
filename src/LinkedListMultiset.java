@@ -1,5 +1,5 @@
 import java.io.PrintStream;
-import java.util.*;
+import java.util.Collection;
 
 public class LinkedListMultiset<T> extends Multiset<T>
 {
@@ -7,47 +7,86 @@ public class LinkedListMultiset<T> extends Multiset<T>
 	private Node<T> tail;
 	private int size = 0;
 
-	public LinkedListMultiset() {
-		// Implement me!
-	} // end of LinkedListMultiset()
+	public LinkedListMultiset() {}
+	public LinkedListMultiset(Collection<? extends T> collection) {
+	    for (T each : collection) {
+	        add(each);
+        }
+    }
 
 
-	public void add(T item) throws NullPointerException {
-		if (item == null) throw new NullPointerException("null item passed into add function");
+	public void add(T item) {
+        validateItem(item);
 
-		Node<T> newNode = new Node<>(item, null, null);
+        Node<T> searchNode = findNodeContaining(item);
 
-		if (isEmpty()) {
-			head = newNode;
-		} else {
-			newNode.setPrevious(tail);
-			tail.next = newNode;
-		}
-		tail = newNode;
+        if (searchNode == null) { //Add to the end
+            Node<T> newNode = new Node<>(item, null, null);
+            newNode.setCount(1);
+
+            if (isEmpty()) {
+                head = newNode;
+            } else {
+                newNode.setPrevious(tail);
+                tail.next = newNode;
+            }
+            tail = newNode;
+            size++;
+        } else {
+            int count = searchNode.getCount();
+            searchNode.setCount(++count);
+            size++;
+        }
 	}
 	
 	
 	public int search(T item) {
-		// Implement me!		
-		
-		// default return, please override when you implement this method
-		return 0;
-	} // end of add()
+        validateItem(item);
+
+        Node<T> searchNode = findNodeContaining(item);
+        if (searchNode == null) {
+            return 0;
+        } else {
+            return searchNode.getCount();
+        }
+	}
 	
 	
 	public void removeOne(T item) {
-		// Implement me!
-	} // end of removeOne()
+        validateItem(item);
+
+        Node<T> searchNode = findNodeContaining(item);
+        if (searchNode != null && searchNode.getCount() == 1) {
+            searchNode.previous.setNext(searchNode.next);
+            size--;
+        } else {
+            int count = searchNode.getCount();
+            searchNode.setCount(--count);
+            size--;
+        }
+	}
 	
 	
 	public void removeAll(T item) {
-		// Implement me!
-	} // end of removeAll()
+        validateItem(item);
+
+        Node<T> searchNode = findNodeContaining(item);
+
+        if (searchNode != null) {
+            size -= searchNode.getCount();
+            searchNode.previous.setNext(searchNode.next);
+        }
+	}
 	
 	
 	public void print(PrintStream out) {
-		// Implement me!
-	} // end of print()
+        Node<T> currentNode = head;
+        while (currentNode != null) {
+            out.println("Current element: " + currentNode.element);
+            out.println("Count: " + currentNode.getCount());
+            currentNode = currentNode.getNext();
+        }
+	}
 
 
 	//Utility Methods
@@ -55,11 +94,29 @@ public class LinkedListMultiset<T> extends Multiset<T>
 		return size == 0;
 	}
 
+	private Node<T> findNodeContaining(T item) throws NullPointerException {
+	    Node<T> currentNode = head;
+
+	    while (currentNode != null) {
+	        if (currentNode.getElement().equals(item)) {
+	            return currentNode;
+            }
+	        currentNode = currentNode.getNext();
+        }
+        return null;
+    }
+
+
+	private void validateItem(T item) throws NullPointerException {
+        if (item == null) throw new NullPointerException("null item passed into add function");
+    }
+
 	//Nested Node class
 	private class Node<T> {
 		private T element;
 		private Node<T> previous;
 		private Node<T> next;
+		private int count = 0;
 
 		Node(T element, Node<T> previous, Node<T> next) {
 			this.element = element;
@@ -79,7 +136,11 @@ public class LinkedListMultiset<T> extends Multiset<T>
 			return next;
 		}
 
-		public void setElement(T element) {
+        public int getCount() {
+            return count;
+        }
+
+        public void setElement(T element) {
 			this.element = element;
 		}
 
@@ -90,5 +151,9 @@ public class LinkedListMultiset<T> extends Multiset<T>
 		public void setNext(Node<T> next) {
 			this.next = next;
 		}
-	}
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+    }
 } // end of class LinkedListMultiset
